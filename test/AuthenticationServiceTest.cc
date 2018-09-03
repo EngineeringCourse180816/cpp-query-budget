@@ -1,43 +1,68 @@
 #include "gtest/gtest.h"
 #include "../main/AuthenticationService.h"
-#include "StubProfileDao.h"
-#include "gmock/gmock.h"
-#include "StubRsaTokenDao.h"
+#include "../main/ProfileDao.h"
+#include "../main/RsaTokenDao.h"
+#include <string>
+#include "../main/StubClass.h"
+#include "../main/BudgetQuery.h"
+#include "../main/date.h"
 
-using ::testing::NiceMock;
-using ::testing::Return;
+using namespace std;
+using namespace testing;
+using namespace date;
 
-class AuthenticationServiceTest : public testing::Test {
-protected:
-    NiceMock<StubProfileDao> stubProfileDao;
-    NiceMock<StubRsaTokenDao> stubRsaTokenDao;
-    AuthenticationService target = AuthenticationService(stubProfileDao, stubRsaTokenDao);
 
-    void givenPassword(string userName, string password) {
-        ON_CALL(stubProfileDao, getPassword(userName)).WillByDefault(Return(password));
-    }
+namespace {
 
-    void givenToken(string userName, string token) {
-        ON_CALL(stubRsaTokenDao, getRandom(userName)).WillByDefault(Return(token));
-    }
-};
+	TEST(BudgetQuery, findBudget) {
+		StubBudgetDao budgetDao;
+		BudgetQuery target(&budgetDao);
 
-TEST_F(AuthenticationServiceTest, IsValid) {
-    givenPassword("joey", "91");
-    givenToken("joey", "000000");
+		Budgets budgets;
+		budgets.insert(make_pair(year_month_day_last(year(2018), (month_day_last)month(0x01)), 370));
+		budgets.insert(make_pair(year_month_day_last(year(2018), (month_day_last)month(0x02)), 370));
+		budgets.insert(make_pair(year_month_day_last(year(2018), (month_day_last)month(0x03)), 370));
+		budgets.insert(make_pair(year_month_day_last(year(2018), (month_day_last)month(0x04)), 370));
+		ON_CALL(budgetDao, findAll()).WillByDefault(Return(budgets));
+		int total = target.findBudget(year_month_day(year(2018), month(0x01), day(0x02)),
+			year_month_day(year(2018), month(0x03), day(0x09)));
+		ASSERT_TRUE(200 == total);
+	}
 
-    ASSERT_TRUE(target.isValid("joey", "91000000"));
-}
+  //  TEST(AuthenticationService, IsValid) {
+		//MockOtpLogger logger;
+		//StubRsaTokenDao rasToken;
+  //      AuthenticationService target(&rasToken, &logger);
+		//ON_CALL(rasToken, getRandom("joey")).WillByDefault(Return("000000"));
+  //      ASSERT_TRUE(target.isValid("joey", "91000000"));
+		////EXPECT_CALL(rasToken, getRandom("joey")).WillOnce(Return("000000"));
+		////ASSERT_TRUE(target.isValid("joey", "91000000"));
+		//EXPECT_CALL(rasToken, getRandom("joey")).WillOnce(Return("000001"));
+		//EXPECT_CALL(logger, printf("Authentication is invalid!"));
+		//ASSERT_FALSE(target.isValid("joey", "91000000"));
+		////ASSERT_TRUE("Authentication is invalid!" == logger.getMsg());
+  //  }
 
-TEST_F(AuthenticationServiceTest, IsNotValid) {
-    givenPassword("joey", "91");
-    givenToken("joey", "000000");
+	//TEST(AuthenticationService, isTodayBirth) {
+	//	OtpLogger logger;
+	//	RsaTokenDao rasToken;
+	//	AuthenticationService target(&rasToken, &logger);
+	//	ASSERT_FALSE(target.isTodayBirth());
 
-    ASSERT_FALSE(target.isValid("joey", "wrong password"));
-}
+	//	SYSTEMTIME stUTC;
+	//	::GetSystemTime(&stUTC);
+	//	SYSTEMTIME newTime = stUTC;
+	//	newTime.wMonth = 4;
+	//	newTime.wDay = 9;
+	//	SetSystemTime(&newTime);
+	//	ASSERT_TRUE(target.isTodayBirth());
+	//	SetSystemTime(&stUTC);
 
-TEST_F(AuthenticationServiceTest, NormalUsage) {
-    ConcreteAuthenticationService target;
 
-    ASSERT_FALSE(target.isValid("joey", "91264206"));
+	//	//ASSERT_TRUE(target.isTodayBirth(4, 9));
+	//	//ASSERT_FALSE(target.isTodayBirth(9, 32));
+	//	//ASSERT_FALSE(target.isTodayBirth(9, 0));
+	//	//ASSERT_FALSE(target.isTodayBirth(0, 12));
+	//	//ASSERT_FALSE(target.isTodayBirth(13, 12));
+	//}
 }
