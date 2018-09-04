@@ -1,7 +1,4 @@
 #include "gtest/gtest.h"
-#include "../main/AuthenticationService.h"
-#include "../main/ProfileDao.h"
-#include "../main/RsaTokenDao.h"
 #include <string>
 #include "../main/StubClass.h"
 #include "../main/BudgetQuery.h"
