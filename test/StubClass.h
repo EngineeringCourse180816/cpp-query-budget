@@ -1,4 +1,4 @@
-#include "BudgetDao.h"
+#include "../main/BudgetDao.h"
 #include "gmock/gmock.h"
 
 class StubBudgetDao : public BudgetDao
