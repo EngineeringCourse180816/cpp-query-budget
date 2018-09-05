@@ -20,6 +20,9 @@ int BudgetQuery::findBudget(year_month_day startYearMonDay, year_month_day endYe
 	//}
 	
 	Budgets data = m_budgetDao->findAll();
+	if (data.empty())
+		return 0;
+
 	year_month_day_last startMon(startYearMonDay.year(), month_day_last(startYearMonDay.month()));
 	year_month_day_last endMon(endYearMonDay.year(), month_day_last(endYearMonDay.month()));
 	if (startMon == endMon)
