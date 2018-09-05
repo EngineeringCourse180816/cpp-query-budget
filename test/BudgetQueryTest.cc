@@ -3,40 +3,46 @@
 #include "StubClass.h"
 #include "../main/BudgetQuery.h"
 #include "../main/date.h"
+#include <stdarg.h>
 
 using namespace std;
 using namespace testing;
 using namespace date;
 
+class BudgetQueryTest : public testing::Test {
+protected:
+    StubBudgetDao budgetDao;
+    BudgetQuery target = BudgetQuery(&budgetDao);
 
-namespace {
-
-    TEST(BudgetQuery, original_test) {
-        StubBudgetDao budgetDao;
-        BudgetQuery target(&budgetDao);
-
-        Budgets budgets;
-        budgets.insert(make_pair(year_month_day_last(year(2018), (month_day_last) month(0x01)), 310));
-        budgets.insert(make_pair(year_month_day_last(year(2018), (month_day_last) month(0x02)), 280));
-        budgets.insert(make_pair(year_month_day_last(year(2018), (month_day_last) month(0x03)), 310));
-        budgets.insert(make_pair(year_month_day_last(year(2018), (month_day_last) month(0x04)), 300));
-        ON_CALL(budgetDao, findAll()).WillByDefault(Return(budgets));
-
-        int total = target.findBudget(year_month_day(year(2018), month(0x01), day(0x02)),
-                                      year_month_day(year(2018), month(0x03), day(0x09)));
-        ASSERT_EQ(300 + 280 + 90, total);
-    }
-
-    TEST(BudgetQuery, no_budget) {
-        StubBudgetDao budgetDao;
-        BudgetQuery target(&budgetDao);
-
+    void givenBudgets() {
         Budgets budgets;
         ON_CALL(budgetDao, findAll()).WillByDefault(Return(budgets));
-
-        int total = target.findBudget(year_month_day(year(2018), month(1), day(2)),
-                                      year_month_day(year(2018), month(1), day(2)));
-        ASSERT_EQ(0, total);
     }
 
+    pair<year_month_day_last, int> budget(int aYear, int aMonth, int amount) {
+        return make_pair(year_month_day_last(year(aYear), (month_day_last) month(aMonth)), amount);
+    }
+
+    year_month_day date(int aYear, int aMonth, int aDay) {
+        return year_month_day(year(aYear), month(aMonth), day(aDay));
+    }
+
+};
+
+TEST_F(BudgetQueryTest, original_test) {
+
+    Budgets budgets;
+    budgets.insert(budget(2018, 1, 310));
+    budgets.insert(budget(2018, 2, 280));
+    budgets.insert(budget(2018, 3, 310));
+    budgets.insert(budget(2018, 4, 300));
+    ON_CALL(budgetDao, findAll()).WillByDefault(Return(budgets));
+
+    ASSERT_EQ(300 + 280 + 90, target.findBudget(date(2018, 1, 2), date(2018, 3, 9)));
+}
+
+TEST_F(BudgetQueryTest, no_budget) {
+    givenBudgets();
+
+    ASSERT_EQ(0, target.findBudget(date(2018, 1, 2), date(2018, 1, 2)));
 }
