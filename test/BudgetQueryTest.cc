@@ -4,6 +4,7 @@
 #include "../main/BudgetQuery.h"
 #include "../main/date.h"
 #include <stdarg.h>
+#include <array>
 
 using namespace std;
 using namespace testing;
@@ -12,10 +13,13 @@ using namespace date;
 class BudgetQueryTest : public testing::Test {
 protected:
     StubBudgetDao budgetDao;
+    Budgets budgets;
     BudgetQuery target = BudgetQuery(&budgetDao);
 
-    void givenBudgets() {
-        Budgets budgets;
+    void givenBudgets(vector<pair<year_month_day_last, int>> all) {
+        for (const pair<year_month_day_last, int> budget : all) {
+            budgets.insert(budget);
+        }
         ON_CALL(budgetDao, findAll()).WillByDefault(Return(budgets));
     }
 
@@ -30,19 +34,13 @@ protected:
 };
 
 TEST_F(BudgetQueryTest, original_test) {
-
-    Budgets budgets;
-    budgets.insert(budget(2018, 1, 310));
-    budgets.insert(budget(2018, 2, 280));
-    budgets.insert(budget(2018, 3, 310));
-    budgets.insert(budget(2018, 4, 300));
-    ON_CALL(budgetDao, findAll()).WillByDefault(Return(budgets));
+    givenBudgets({budget(2018, 1, 310), budget(2018, 2, 280), budget(2018, 3, 310), budget(2018, 4, 300)});
 
     ASSERT_EQ(300 + 280 + 90, target.findBudget(date(2018, 1, 2), date(2018, 3, 9)));
 }
 
 TEST_F(BudgetQueryTest, no_budget) {
-    givenBudgets();
+    givenBudgets({});
 
     ASSERT_EQ(0, target.findBudget(date(2018, 1, 2), date(2018, 1, 2)));
 }
