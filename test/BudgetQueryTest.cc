@@ -16,15 +16,16 @@ protected:
     Budgets budgets;
     BudgetQuery target = BudgetQuery(&budgetDao);
 
-    void givenBudgets(vector<pair<year_month_day_last, int>> all) {
-        for (const pair<year_month_day_last, int> budget : all) {
+    void givenBudgets(vector<pair<year_month_day_last, Budget>> all) {
+        for (const pair<year_month_day_last, Budget> budget : all) {
             budgets.insert(budget);
         }
         ON_CALL(budgetDao, findAll()).WillByDefault(Return(budgets));
     }
 
-    pair<year_month_day_last, int> budget(int aYear, int aMonth, int amount) {
-        return make_pair(year_month_day_last(year(aYear), (month_day_last) month(aMonth)), amount);
+    pair<year_month_day_last, Budget> budget(int aYear, int aMonth, int amount) {
+        const year_month_day_last &yearMonth = year_month_day_last(year(aYear), (month_day_last) month(aMonth));
+        return make_pair(yearMonth, Budget(yearMonth, amount));
     }
 
     year_month_day date(int aYear, int aMonth, int aDay) {

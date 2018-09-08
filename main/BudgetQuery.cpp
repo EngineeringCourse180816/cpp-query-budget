@@ -17,14 +17,14 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
 
     if (startMonth == endMonth) {
         int diffDays = unsigned(endDate.day()) - unsigned(startDate.day()) + 1;
-        return getBudgetAmount(data, startMonth) / unsigned(startMonth.day()) * diffDays;
+        return getBudgetAmount(data, startMonth).amount / unsigned(startMonth.day()) * diffDays;
     }
 
     int totalAmount = 0;
 
     for (year_month_day_last currentMonth = startMonth; currentMonth <= endMonth; currentMonth += months(1)) {
 
-        int amount = getBudgetAmount(data, currentMonth);
+        int amount = getBudgetAmount(data, currentMonth).amount;
 
         if (startMonth == currentMonth) {
             int diffDays = unsigned(startMonth.day()) - unsigned(startDate.day()) + 1;
@@ -42,6 +42,6 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
     return totalAmount;
 }
 
-int BudgetQuery::getBudgetAmount(Budgets &data, const year_month_day_last &startMonth) const {
-    return data.find(startMonth) == data.end() ? 0 : data.find(startMonth)->second;
+Budget BudgetQuery::getBudgetAmount(Budgets &data, const year_month_day_last &startMonth) const {
+    return data.find(startMonth) == data.end() ? Budget(startMonth, 0) : data.find(startMonth)->second;
 }
