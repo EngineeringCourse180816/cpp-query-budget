@@ -27,7 +27,7 @@ int BudgetQuery::findBudget(year_month_day startYearMonDay, year_month_day endYe
 	year_month_day_last endMon(endYearMonDay.year(), month_day_last(endYearMonDay.month()));
 	if (startMon == endMon)
 	{
-		int monAmount = data.find(startMon)->second;
+		int monAmount = data.find(startMon) == data.end() ? 0 : data.find(startMon)->second;
 		unsigned startMonDays = unsigned(startYearMonDay.day());
 		unsigned endMonDays = unsigned(endYearMonDay.day());
 		int diffDays = endMonDays - startMonDays + 1;
