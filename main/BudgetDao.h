@@ -1,3 +1,6 @@
+#ifndef CPP_OTP_BUDGETDAO_H
+#define CPP_OTP_BUDGETDAO_H
+
 #include <map>
 #include "date.h"
 
@@ -16,4 +19,6 @@ public:
 private:
 	Budgets m_budgets;
 };
+
+#endif //CPP_OTP_BUDGETDAO_H
 

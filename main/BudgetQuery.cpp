@@ -1,6 +1,4 @@
 #include "BudgetQuery.h"
-#include "BudgetDao.h"
-
 
 BudgetQuery::BudgetQuery(BudgetDao* budgetDao)
 	: m_budgetDao(budgetDao)
@@ -11,48 +9,41 @@ BudgetQuery::~BudgetQuery()
 {
 }
 
-int BudgetQuery::findBudget(year_month_day startYearMonDay, year_month_day endYearMonDay)
+int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate)
 {
-	int totalAmount = 0;
-	//if (startYearMonDay.ok()  || endYearMonDay.ok())
-	//{
-	//	return totalAmount;
-	//}
-	
 	Budgets data = m_budgetDao->findAll();
 	if (data.empty())
 		return 0;
 
-	year_month_day_last startMon(startYearMonDay.year(), month_day_last(startYearMonDay.month()));
-	year_month_day_last endMon(endYearMonDay.year(), month_day_last(endYearMonDay.month()));
-	if (startMon == endMon)
+	year_month_day_last startMonth(startDate.year(), month_day_last(startDate.month()));
+	year_month_day_last endMonth(endDate.year(), month_day_last(endDate.month()));
+    int totalAmount = 0;
+
+	if (startMonth == endMonth)
 	{
-		int monAmount = data.find(startMon) == data.end() ? 0 : data.find(startMon)->second;
-		unsigned startMonDays = unsigned(startYearMonDay.day());
-		unsigned endMonDays = unsigned(endYearMonDay.day());
-		int diffDays = endMonDays - startMonDays + 1;
-		totalAmount += (monAmount / unsigned(startMon.day()) * diffDays);
+        int diffDays = unsigned(endDate.day()) - unsigned(startDate.day()) + 1;
+		totalAmount += (getBudgetAmount(data, startMonth) / unsigned(startMonth.day()) * diffDays);
 	}
-	else if (startMon < endMon)
+	else if (startMonth < endMonth)
 	{
-		year_month_day_last tmpYearMon = startMon;
-		while (tmpYearMon <= endMon)
+		year_month_day_last tmpYearMon = startMonth;
+		while (tmpYearMon <= endMonth)
 		{
 			int monAmount = 0;
 			map<year_month_day_last, int>::iterator it = data.find(tmpYearMon);
 			if(it != data.end())
 				monAmount = data.find(tmpYearMon)->second;
 
-			if (startMon == tmpYearMon)
+			if (startMonth == tmpYearMon)
 			{
-				unsigned startMonDays = unsigned(startMon.day());
-				unsigned startYearMonDays = unsigned(startYearMonDay.day());
+				unsigned startMonDays = unsigned(startMonth.day());
+				unsigned startYearMonDays = unsigned(startDate.day());
 				int diffDays = startMonDays - startYearMonDays + 1;
 				totalAmount += (monAmount * diffDays / startMonDays);
 			}
-			else if (endMon == tmpYearMon)
+			else if (endMonth == tmpYearMon)
 			{
-				unsigned endYearMonDays = unsigned(endYearMonDay.day());
+				unsigned endYearMonDays = unsigned(endDate.day());
 				totalAmount += (monAmount * endYearMonDays / unsigned(tmpYearMon.day()));
 			}
 			else
@@ -64,4 +55,9 @@ int BudgetQuery::findBudget(year_month_day startYearMonDay, year_month_day endYe
 		
 	}
 	return totalAmount;
+}
+
+int BudgetQuery::getBudgetAmount(Budgets &data, const year_month_day_last &startMonth) const {
+	int monAmount = data.find(startMonth) == data.end() ? 0 : data.find(startMonth)->second;
+	return monAmount;
 }
