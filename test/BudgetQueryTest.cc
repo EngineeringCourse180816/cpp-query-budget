@@ -74,3 +74,27 @@ TEST_F(BudgetQueryTest, end_before_budget_first_day) {
 
     ASSERT_EQ(0, target.findBudget(date(2018, 8, 20), date(2018, 8, 30)));
 }
+
+TEST_F(BudgetQueryTest, start_after_budget_last_day) {
+    givenBudgets({budget(2018, 9, 300)});
+
+    ASSERT_EQ(0, target.findBudget(date(2018, 10, 20), date(2018, 10, 30)));
+}
+
+TEST_F(BudgetQueryTest, two_budgets) {
+    givenBudgets({budget(2018, 9, 300), budget(2018, 10, 310)});
+
+    ASSERT_EQ(110 + 300, target.findBudget(date(2018, 9, 20), date(2018, 10, 30)));
+}
+
+TEST_F(BudgetQueryTest, amount_is_different) {
+    givenBudgets({budget(2018, 9, 30), budget(2018, 10, 310)});
+
+    ASSERT_EQ(11 + 300, target.findBudget(date(2018, 9, 20), date(2018, 10, 30)));
+}
+
+TEST_F(BudgetQueryTest, no_budget_in_between) {
+    givenBudgets({budget(2018, 9, 30), budget(2018, 11, 300)});
+
+    ASSERT_EQ(11 + 300, target.findBudget(date(2018, 9, 20), date(2018, 12, 30)));
+}
