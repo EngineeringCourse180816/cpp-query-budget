@@ -44,3 +44,9 @@ TEST_F(BudgetQueryTest, no_budget) {
 
     ASSERT_EQ(0, target.findBudget(date(2018, 1, 2), date(2018, 1, 2)));
 }
+
+TEST_F(BudgetQueryTest, one_day_in_budget_month) {
+    givenBudgets({budget(2018, 9, 300)});
+
+    ASSERT_EQ(10, target.findBudget(date(2018, 9, 2), date(2018, 9, 2)));
+}
