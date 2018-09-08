@@ -52,9 +52,8 @@ int BudgetQuery::findBudget(year_month_day startYearMonDay, year_month_day endYe
 			}
 			else if (endMon == tmpYearMon)
 			{
-				unsigned startMonDays = unsigned(startMon.day());
 				unsigned endYearMonDays = unsigned(endYearMonDay.day());
-				totalAmount += (monAmount * endYearMonDays / startMonDays);
+				totalAmount += (monAmount * endYearMonDays / unsigned(tmpYearMon.day()));
 			}
 			else
 			{
