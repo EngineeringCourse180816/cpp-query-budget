@@ -22,23 +22,20 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
 
     int totalAmount = 0;
 
-    for (year_month_day_last tmpYearMon = startMonth; tmpYearMon <= endMonth; tmpYearMon += months(1)) {
+    for (year_month_day_last currentMonth = startMonth; currentMonth <= endMonth; currentMonth += months(1)) {
 
-        int monAmount = 0;
-        auto it = data.find(tmpYearMon);
-        if (it != data.end())
-            monAmount = data.find(tmpYearMon)->second;
+        int amount = getBudgetAmount(data, currentMonth);
 
-        if (startMonth == tmpYearMon) {
+        if (startMonth == currentMonth) {
             unsigned startMonDays = unsigned(startMonth.day());
             unsigned startYearMonDays = unsigned(startDate.day());
             int diffDays = startMonDays - startYearMonDays + 1;
-            totalAmount += (monAmount * diffDays / startMonDays);
-        } else if (endMonth == tmpYearMon) {
+            totalAmount += (amount * diffDays / startMonDays);
+        } else if (endMonth == currentMonth) {
             unsigned endYearMonDays = unsigned(endDate.day());
-            totalAmount += (monAmount * endYearMonDays / unsigned(tmpYearMon.day()));
+            totalAmount += (amount * endYearMonDays / unsigned(currentMonth.day()));
         } else {
-            totalAmount += monAmount;
+            totalAmount += amount;
         }
 
     }
@@ -47,6 +44,5 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
 }
 
 int BudgetQuery::getBudgetAmount(Budgets &data, const year_month_day_last &startMonth) const {
-    int monAmount = data.find(startMonth) == data.end() ? 0 : data.find(startMonth)->second;
-    return monAmount;
+    return data.find(startMonth) == data.end() ? 0 : data.find(startMonth)->second;
 }
