@@ -21,10 +21,11 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
     }
 
     int totalAmount = 0;
-    year_month_day_last tmpYearMon = startMonth;
-    while (tmpYearMon <= endMonth) {
+
+    for (year_month_day_last tmpYearMon = startMonth; tmpYearMon <= endMonth; tmpYearMon += months(1)) {
+
         int monAmount = 0;
-        map<year_month_day_last, int>::iterator it = data.find(tmpYearMon);
+        auto it = data.find(tmpYearMon);
         if (it != data.end())
             monAmount = data.find(tmpYearMon)->second;
 
@@ -39,7 +40,7 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
         } else {
             totalAmount += monAmount;
         }
-        tmpYearMon += months(1);
+
     }
 
     return totalAmount;
