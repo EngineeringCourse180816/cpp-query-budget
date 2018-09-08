@@ -24,17 +24,17 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
 
     for (year_month_day_last currentMonth = startMonth; currentMonth <= endMonth; currentMonth += months(1)) {
 
-        int amount = getBudgetAmount(data, currentMonth).amount;
+        const Budget &budget = getBudgetAmount(data, currentMonth);
 
         if (startMonth == currentMonth) {
             int diffDays = unsigned(startMonth.day()) - unsigned(startDate.day()) + 1;
-            totalAmount += amount / unsigned(currentMonth.day()) * diffDays;
+            totalAmount += budget.amount / unsigned(currentMonth.day()) * diffDays;
         } else if (endMonth == currentMonth) {
             int diffDays = unsigned(endDate.day()) - unsigned(year_month_day(currentMonth.year(), currentMonth.month(), day(1)).day()) + 1;
-            totalAmount += amount / unsigned(currentMonth.day()) * diffDays;
+            totalAmount += budget.amount / unsigned(currentMonth.day()) * diffDays;
         } else {
             int diffDays = unsigned(currentMonth.day()) - unsigned(year_month_day(currentMonth.year(), currentMonth.month(), day(1)).day()) + 1;
-            totalAmount += amount / unsigned(currentMonth.day()) * diffDays;
+            totalAmount += budget.amount / unsigned(currentMonth.day()) * diffDays;
         }
 
     }
