@@ -28,7 +28,7 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
 
         if (startMonth == currentMonth) {
             int diffDays = unsigned(startMonth.day()) - unsigned(startDate.day()) + 1;
-            totalAmount += amount / unsigned(startMonth.day()) * diffDays;
+            totalAmount += amount / unsigned(currentMonth.day()) * diffDays;
         } else if (endMonth == currentMonth) {
             int diffDays = unsigned(endDate.day()) - unsigned(year_month_day(currentMonth.year(), currentMonth.month(), day(1)).day()) + 1;
             totalAmount += amount / unsigned(currentMonth.day()) * diffDays;
