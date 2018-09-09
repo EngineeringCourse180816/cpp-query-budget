@@ -15,7 +15,7 @@ public:
 private:
 	BudgetDao* m_budgetDao;
 
-	Budget getBudgetAmount(Budgets &data, const year_month_day_last &startMonth) const;
+	Budget getBudget(Budgets &data, const year_month_day_last &startMonth) const;
 
 	unsigned int getDailyAmount(const Budget &budget) const;
 };

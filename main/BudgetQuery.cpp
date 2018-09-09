@@ -17,24 +17,24 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
 
     if (startMonth == endMonth) {
         int diffDays = unsigned(endDate.day()) - unsigned(startDate.day()) + 1;
-        return getBudgetAmount(data, startMonth).amount / unsigned(startMonth.day()) * diffDays;
+        return getBudget(data, startMonth).getDailyAmount() * diffDays;
     }
 
     int totalAmount = 0;
 
     for (year_month_day_last currentMonth = startMonth; currentMonth <= endMonth; currentMonth += months(1)) {
 
-        const Budget &budget = getBudgetAmount(data, currentMonth);
+        const Budget &budget = getBudget(data, currentMonth);
 
         if (startMonth == currentMonth) {
             int diffDays = unsigned(startMonth.day()) - unsigned(startDate.day()) + 1;
-            totalAmount += getDailyAmount(budget) * diffDays;
+            totalAmount += budget.getDailyAmount() * diffDays;
         } else if (endMonth == currentMonth) {
             int diffDays = unsigned(endDate.day()) - unsigned(year_month_day(currentMonth.year(), currentMonth.month(), day(1)).day()) + 1;
-            totalAmount += getDailyAmount(budget) * diffDays;
+            totalAmount += budget.getDailyAmount() * diffDays;
         } else {
             int diffDays = unsigned(currentMonth.day()) - unsigned(year_month_day(currentMonth.year(), currentMonth.month(), day(1)).day()) + 1;
-            totalAmount += getDailyAmount(budget) * diffDays;
+            totalAmount += budget.getDailyAmount() * diffDays;
         }
 
     }
@@ -42,8 +42,6 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
     return totalAmount;
 }
 
-unsigned int BudgetQuery::getDailyAmount(const Budget &budget) const { return budget.amount / unsigned(budget.yearMonth.day()); }
-
-Budget BudgetQuery::getBudgetAmount(Budgets &data, const year_month_day_last &startMonth) const {
+Budget BudgetQuery::getBudget(Budgets &data, const year_month_day_last &startMonth) const {
     return data.find(startMonth) == data.end() ? Budget(startMonth, 0) : data.find(startMonth)->second;
 }
