@@ -29,6 +29,11 @@ public:
 		return {getFirstDay(), getLastDay()};
 	}
 
+	unsigned int getOverlappingAmount(const Period &period) const {
+		return getDailyAmount() * period.getOverlappingDayCount(getPeriod());
+	}
+
+
 private:
 	year_month_day_last yearMonth = year_month_day_last(year(1999), month_day_last(month(1)));
 	int amount = 0;

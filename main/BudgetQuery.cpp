@@ -9,14 +9,11 @@ BudgetQuery::~BudgetQuery() {
 }
 
 int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
-    return queryBudget(Period(startDate, endDate));
-}
-
-int BudgetQuery::queryBudget(const Period period) const {
+    const Period period = Period(startDate, endDate);
     int totalAmount = 0;
 
-    for (auto const& yearMonthBudget: m_budgetDao->findAll()) {
-        totalAmount += yearMonthBudget.getDailyAmount() * period.getOverlappingDayCount(yearMonthBudget.getPeriod());
+    for (auto const& budget: m_budgetDao->findAll()) {
+        totalAmount += budget.getOverlappingAmount(period);
     }
 
     return totalAmount;

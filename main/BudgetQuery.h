@@ -16,7 +16,5 @@ public:
 private:
 	BudgetDao* m_budgetDao;
 
-	int queryBudget(const Period period) const;
-
 };
 
