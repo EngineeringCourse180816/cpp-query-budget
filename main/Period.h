@@ -20,6 +20,12 @@ public:
         return unsigned(end.day()) - unsigned(start.day()) + 1;
     }
 
+    int getOverlappingDayCount(const Period &another) const {
+        const year_month_day &overlappingStart = start > another.start ? start : another.start;
+        const year_month_day &overlappingEnd = end < another.end ? end : another.end;
+        return unsigned(overlappingEnd.day()) - unsigned(overlappingStart.day()) + 1;
+    }
+
 };
 
 #endif //CPP_OTP_PERIOD_H
