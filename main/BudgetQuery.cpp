@@ -31,13 +31,13 @@ int BudgetQuery::queryBudget(const Period period) const {
         const Budget &budget = getBudget(data, currentMonth);
 
         if (startMonth == currentMonth) {
-            int diffDays = unsigned(startMonth.day()) - unsigned(period.start.day()) + 1;
+            int diffDays = unsigned(budget.getLastDay().day()) - unsigned(period.start.day()) + 1;
             totalAmount += budget.getDailyAmount() * diffDays;
         } else if (endMonth == currentMonth) {
-            int diffDays = unsigned(period.end.day()) - unsigned(year_month_day(currentMonth.year(), currentMonth.month(), day(1)).day()) + 1;
+            int diffDays = unsigned(period.end.day()) - unsigned(budget.getFirstDay().day()) + 1;
             totalAmount += budget.getDailyAmount() * diffDays;
         } else {
-            int diffDays = unsigned(currentMonth.day()) - unsigned(year_month_day(currentMonth.year(), currentMonth.month(), day(1)).day()) + 1;
+            int diffDays = unsigned(budget.getLastDay().day()) - unsigned(budget.getFirstDay().day()) + 1;
             totalAmount += budget.getDailyAmount() * diffDays;
         }
 
