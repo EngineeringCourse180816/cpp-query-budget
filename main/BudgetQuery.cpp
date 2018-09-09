@@ -14,16 +14,9 @@ int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
 
 int BudgetQuery::queryBudget(const Period period) const {
     Budgets data = m_budgetDao->findAll();
-    if (data.empty())
-        return 0;
 
     year_month_day_last startMonth(period.start.year(), month_day_last(period.start.month()));
     year_month_day_last endMonth(period.end.year(), month_day_last(period.end.month()));
-
-    if (startMonth == endMonth) {
-        const Budget &budget = getBudget(data, startMonth);
-        return budget.getDailyAmount() * period.getOverlappingDayCount(budget.getPeriod());
-    }
 
     int totalAmount = 0;
 
