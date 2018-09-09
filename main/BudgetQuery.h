@@ -16,9 +16,7 @@ public:
 private:
 	BudgetDao* m_budgetDao;
 
-	Budget getBudget(Budgets &data, const year_month_day_last &startMonth) const;
-
-    int queryBudget(const Period period) const;
+	int queryBudget(const Period period) const;
 
 };
 

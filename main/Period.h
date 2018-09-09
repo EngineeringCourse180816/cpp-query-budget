@@ -23,6 +23,8 @@ public:
     int getOverlappingDayCount(const Period &another) const {
         const year_month_day &overlappingStart = start > another.start ? start : another.start;
         const year_month_day &overlappingEnd = end < another.end ? end : another.end;
+        if(overlappingStart > overlappingEnd)
+            return 0;
         return unsigned(overlappingEnd.day()) - unsigned(overlappingStart.day()) + 1;
     }
 
