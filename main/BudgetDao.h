@@ -15,27 +15,22 @@ public:
 		this->amount = amount;
 	}
 
-	unsigned int getDailyAmount() const { return amount / unsigned(yearMonth.day()); }
-
-	year_month_day getLastDay() const {
-        return yearMonth;
-	}
-
-	year_month_day getFirstDay() const {
-		return {yearMonth.year(), yearMonth.month(), day(1)};
-	}
-
-	Period getPeriod() const {
-		return {getFirstDay(), getLastDay()};
-	}
-
-	unsigned int getOverlappingAmount(const Period &period) const {
-		return getDailyAmount() * period.getOverlappingDayCount(getPeriod());
-	}
-
+    int getOverlappingAmount(const Period &period) const {
+        return getDailyAmount() * period.getOverlappingDayCount({getFirstDay(), getLastDay()});
+    }
 
 private:
-	year_month_day_last yearMonth = year_month_day_last(year(1999), month_day_last(month(1)));
+    int getDailyAmount() const { return amount / unsigned(yearMonth.day()); }
+
+    year_month_day getLastDay() const {
+        return yearMonth;
+    }
+
+    year_month_day getFirstDay() const {
+        return {yearMonth.year(), yearMonth.month(), day(1)};
+    }
+
+    year_month_day_last yearMonth = year_month_day_last(year(1999), month_day_last(month(1)));
 	int amount = 0;
 
 };

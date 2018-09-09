@@ -16,13 +16,14 @@ public:
         this->end = end;
     }
 
-    int getDayCount() const {
-        return unsigned(end.day()) - unsigned(start.day()) + 1;
-    }
-
     int getOverlappingDayCount(const Period &another) const {
         const year_month_day &overlappingStart = start > another.start ? start : another.start;
         const year_month_day &overlappingEnd = end < another.end ? end : another.end;
+
+        return getDayCount(overlappingStart, overlappingEnd);
+    }
+
+    int getDayCount(const year_month_day &overlappingStart, const year_month_day &overlappingEnd) const {
         if(overlappingStart > overlappingEnd)
             return 0;
         return unsigned(overlappingEnd.day()) - unsigned(overlappingStart.day()) + 1;

@@ -10,6 +10,7 @@ BudgetQuery::~BudgetQuery() {
 
 int BudgetQuery::findBudget(year_month_day startDate, year_month_day endDate) {
     const Period period = Period(startDate, endDate);
+
     int totalAmount = 0;
 
     for (auto const& budget: m_budgetDao->findAll()) {
