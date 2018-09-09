@@ -3,6 +3,7 @@
 
 #include <map>
 #include "date.h"
+#include "Period.h"
 
 using namespace std;
 using namespace date;
@@ -21,7 +22,11 @@ public:
 	}
 
 	year_month_day getFirstDay() const {
-		return year_month_day(yearMonth.year(), yearMonth.month(), day(1));
+		return {yearMonth.year(), yearMonth.month(), day(1)};
+	}
+
+	Period getPeriod() const {
+		return {getFirstDay(), getLastDay()};
 	}
 
 private:

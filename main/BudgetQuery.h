@@ -18,10 +18,8 @@ private:
 
 	Budget getBudget(Budgets &data, const year_month_day_last &startMonth) const;
 
-	unsigned int getDailyAmount(const Budget &budget) const;
-
     int queryBudget(const Period period) const;
 
-    int getDayCount(const Period &period) const;
+	int getOverlappingDayCount(const Period &period, const Period &another) const;
 };
 

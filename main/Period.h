@@ -8,8 +8,8 @@ using namespace date;
 class Period {
 
 public:
-    year_month_day start;
-    year_month_day end;
+    year_month_day start{};
+    year_month_day end{};
 
     Period(year_month_day start, year_month_day end) {
         this->start = start;
