@@ -1,5 +1,6 @@
 #include "date.h"
 #include "BudgetDao.h"
+#include "Period.h"
 
 using namespace date;
 
@@ -18,5 +19,7 @@ private:
 	Budget getBudget(Budgets &data, const year_month_day_last &startMonth) const;
 
 	unsigned int getDailyAmount(const Budget &budget) const;
+
+    int queryBudget(const Period period) const;
 };
 
