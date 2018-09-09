@@ -1,7 +1,7 @@
 #ifndef CPP_OTP_BUDGETDAO_H
 #define CPP_OTP_BUDGETDAO_H
 
-#include <map>
+#include <vector>
 #include "date.h"
 #include "Period.h"
 
@@ -35,7 +35,7 @@ private:
 
 };
 
-typedef map<year_month_day_last, Budget> Budgets;
+typedef vector<Budget> Budgets;
 
 class BudgetDao
 {

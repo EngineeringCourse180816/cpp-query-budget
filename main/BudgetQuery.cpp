@@ -16,7 +16,7 @@ int BudgetQuery::queryBudget(const Period period) const {
     int totalAmount = 0;
 
     for (auto const& yearMonthBudget: m_budgetDao->findAll()) {
-        totalAmount += yearMonthBudget.second.getDailyAmount() * period.getOverlappingDayCount(yearMonthBudget.second.getPeriod());
+        totalAmount += yearMonthBudget.getDailyAmount() * period.getOverlappingDayCount(yearMonthBudget.getPeriod());
     }
 
     return totalAmount;
