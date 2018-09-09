@@ -21,5 +21,7 @@ private:
 	unsigned int getDailyAmount(const Budget &budget) const;
 
     int queryBudget(const Period period) const;
+
+    int getDayCount(const Period &period) const;
 };
 

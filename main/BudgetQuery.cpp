@@ -21,8 +21,7 @@ int BudgetQuery::queryBudget(const Period period) const {
     year_month_day_last endMonth(period.end.year(), month_day_last(period.end.month()));
 
     if (startMonth == endMonth) {
-        int diffDays = unsigned(period.end.day()) - unsigned(period.start.day()) + 1;
-        return getBudget(data, startMonth).getDailyAmount() * diffDays;
+        return getBudget(data, startMonth).getDailyAmount() * period.getDayCount();
     }
 
     int totalAmount = 0;

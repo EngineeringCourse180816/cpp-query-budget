@@ -16,6 +16,10 @@ public:
         this->end = end;
     }
 
+    int getDayCount() const {
+        return unsigned(end.day()) - unsigned(start.day()) + 1;
+    }
+
 };
 
 #endif //CPP_OTP_PERIOD_H
